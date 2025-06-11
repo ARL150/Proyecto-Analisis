@@ -1,0 +1,30 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+
+import { Login } from './components/login/login';
+import { Dashboard } from './components/dashboard/dashboard';
+
+
+import { AsignarDocumentosComponent } from './components/asignar-documentos/asignar-documentos';
+import { AgendarDocumentos } from './components/agendar-documentos/agendar-documentos';
+import { FirmarDocumentos } from './components/firmar-documentos/firmar-documentos';
+import { Tramites } from './components/tramites/tramites';
+import { AuthGuard } from './guards/auth-guard';
+
+
+export const routes: Routes = [
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'login', component: Login },
+  { path: 'dashboard', component: Dashboard, canActivate: [AuthGuard] },
+  { path: 'agendar-documentos', component: AgendarDocumentos, canActivate: [AuthGuard] },
+  { path: 'firmar-documentos', component: FirmarDocumentos, canActivate: [AuthGuard] },
+  { path: 'asignar-documentos', component: AsignarDocumentosComponent, canActivate: [AuthGuard] },
+  { path: 'tramites', component: Tramites, canActivate: [AuthGuard] },
+];
+
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}

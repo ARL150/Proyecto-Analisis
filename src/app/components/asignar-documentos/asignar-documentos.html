@@ -1,0 +1,55 @@
+<div class="container mt-4">
+  <div class="card shadow-lg">
+    <div class="card-header bg-dark text-white">
+      <h4>Asignar Trámite Notarial</h4>
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="asignarTramite()">
+        <div class="mb-3">
+          <label for="trabajador" class="form-label">Selecciona un trabajador:</label>
+          <select [(ngModel)]="selectedTrabajadorId" name="trabajador" class="form-select" required>
+            <option [ngValue]="null">-- Selecciona --</option>
+            <option *ngFor="let t of trabajadores" [value]="t.id">{{ t.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="tramite" class="form-label">Selecciona un trámite:</label>
+          <select [(ngModel)]="selectedTramite" name="tramite" class="form-select" required>
+            <option value="">-- Selecciona --</option>
+            <option *ngFor="let t of tramitesDisponibles" [value]="t">{{ t }}</option>
+          </select>
+        </div>
+
+        <h5 class="mt-4">Datos del interesado</h5>
+        <div class="mb-2">
+          <input type="text" [(ngModel)]="interesado.nombre" name="nombre" placeholder="Nombre completo"
+            class="form-control" required>
+        </div>
+        <div class="mb-2">
+          <input type="email" [(ngModel)]="interesado.correo" name="correo" placeholder="Correo electrónico"
+            class="form-control">
+        </div>
+        <div class="mb-3">
+          <input type="text" [(ngModel)]="interesado.telefono" name="telefono" placeholder="Teléfono"
+            class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100" (click)="asignarTramite()"     [disabled]="asignando">
+          {{ asignando ? 'Asignando...' : 'Asignar trámite' }}
+        </button>
+      </form>
+
+      <hr class="mt-4">
+      <div class="text-end">
+        <button class="btn btn-outline-primary me-2" (click)="goToDashboard()">
+          <i class="bi bi-arrow-left-circle"></i> Dashboard
+        </button>
+
+        <button class="btn btn-outline-danger" (click)="logout()">
+          <i class="bi bi-box-arrow-right"></i> Salir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
