@@ -1,60 +1,63 @@
-<div class="container-fluid p-0">
-  <!-- Header -->
-  <header class="d-flex justify-content-between align-items-center p-3 border-bottom bg-light">
-    <h3 class="ms-4">Asignar Trámite Notarial</h3>
-    <div class="me-4">
-      <button class="btn btn-outline-primary me-2" (click)="goToDashboard()">
+<!-- Header exterior con estilo profesional -->
+<header class="w-full bg-blue-700 text-white py-4 shadow">
+  <div class="container mx-auto flex justify-between items-center">
+    <h2 class="text-3xl font-semibold flex items-center gap-2 hover:scale-105 duration-300">
+      <i class="bi bi-journal-plus"></i> Asignar Trámite Notarial
+    </h2>
+
+    <div class="flex gap-3">
+      <button class="bg-gray-50 text-blue-700 px-3 py-1 rounded hover:bg-gray-200 hover:scale-110 duration-300" (click)="goToDashboard()">
         <i class="bi bi-arrow-left-circle"></i> Dashboard
       </button>
-      <button class="btn btn-outline-danger" (click)="logout()">
+      <button class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 hover:scale-110 duration-300" (click)="logout()">
         <i class="bi bi-box-arrow-right"></i> Salir
       </button>
     </div>
-  </header>
+  </div>
+</header>
 
-  <!-- Contenido -->
-  <div class="container py-4">
-    <div class="card shadow-sm">
-      <div class="card-header bg-dark text-white">
-        <h4 class="mb-0">Formulario de Asignación</h4>
-      </div>
-      <div class="card-body">
-        <form (ngSubmit)="asignarTramite()">
-          <div class="mb-3">
-            <label for="trabajador" class="form-label">Selecciona un trabajador:</label>
-            <select [(ngModel)]="selectedTrabajadorId" name="trabajador" class="form-select" required>
-              <option [ngValue]="null">-- Selecciona --</option>
-              <option *ngFor="let t of trabajadores" [value]="t.id">{{ t.nombre }}</option>
-            </select>
-          </div>
+<!-- Contenido -->
+<div class="container py-4">
+  <div class="card shadow-sm">
+    <div class="card-header bg-blue-600 text-white">
+      <h4 class="mb-0 text-center text-2xl font-bold">Formulario de Asignación</h4>
+    </div>
+    <div class="card-body bg-gray-200">
+      <form (ngSubmit)="asignarTramite()">
+        <div class="mb-3">
+          <label for="trabajador" class="form-label">Selecciona un trabajador:</label>
+          <select [(ngModel)]="selectedTrabajadorId" name="trabajador" class="form-select" required>
+            <option [ngValue]="null">-- Selecciona --</option>
+            <option *ngFor="let t of trabajadores" [value]="t.id">{{ t.nombre }}</option>
+          </select>
+        </div>
 
-          <div class="mb-3">
-            <label for="tramite" class="form-label">Selecciona un trámite:</label>
-            <select [(ngModel)]="selectedTramite" name="tramite" class="form-select" required>
-              <option value="">-- Selecciona --</option>
-              <option *ngFor="let t of tramitesDisponibles" [value]="t">{{ t }}</option>
-            </select>
-          </div>
+        <div class="mb-3">
+          <label for="tramite" class="form-label">Selecciona un trámite:</label>
+          <select [(ngModel)]="selectedTramite" name="tramite" class="form-select" required>
+            <option value="">-- Selecciona --</option>
+            <option *ngFor="let t of tramitesDisponibles" [value]="t">{{ t }}</option>
+          </select>
+        </div>
 
-          <h5 class="mt-4">Datos del interesado</h5>
-          <div class="mb-2">
-            <input type="text" [(ngModel)]="interesado.nombre" name="nombre" placeholder="Nombre completo"
-              class="form-control" required>
-          </div>
-          <div class="mb-2">
-            <input type="email" [(ngModel)]="interesado.correo" name="correo" placeholder="Correo electrónico"
-              class="form-control">
-          </div>
-          <div class="mb-3">
-            <input type="text" [(ngModel)]="interesado.telefono" name="telefono" placeholder="Teléfono"
-              class="form-control">
-          </div>
+        <h5 class="mt-4">Datos del interesado</h5>
+        <div class="mb-2">
+          <input type="text" [(ngModel)]="interesado.nombre" name="nombre" placeholder="Nombre completo"
+            class="form-control" required>
+        </div>
+        <div class="mb-2">
+          <input type="email" [(ngModel)]="interesado.correo" name="correo" placeholder="Correo electrónico"
+            class="form-control">
+        </div>
+        <div class="mb-3">
+          <input type="text" [(ngModel)]="interesado.telefono" name="telefono" placeholder="Teléfono"
+            class="form-control">
+        </div>
 
-          <button type="submit" class="btn btn-primary w-100" [disabled]="asignando">
-            {{ asignando ? 'Asignando...' : 'Asignar trámite' }}
-          </button>
-        </form>
-      </div>
+        <button type="submit" class="btn btn-primary w-100" [disabled]="asignando">
+          {{ asignando ? 'Asignando...' : 'Asignar trámite' }}
+        </button>
+      </form>
     </div>
   </div>
 </div>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 interface Interesado {
@@ -35,6 +36,8 @@ export class VerTramites implements OnInit {
   trabajadorIds: number[] = [];
   editando: { [trabajadorId: number]: number | null } = {};
   tramiteOriginal: { [trabajadorId: number]: Tramite | null } = {};
+
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
     const data = localStorage.getItem('trabajadores');
@@ -171,5 +174,25 @@ export class VerTramites implements OnInit {
       a.interesado.correo === b.interesado.correo &&
       a.interesado.telefono === b.interesado.telefono
     );
+  }
+
+  goToDashboard(): void {
+    this.router.navigate(['/dashboard']);
+  }
+
+  logout(): void {
+    Swal.fire({
+      title: '¿Cerrar sesión?',
+      text: 'Tu sesión será cerrada y volverás al login.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Cerrar sesión',
+      cancelButtonText: 'Cancelar'
+    }).then(result => {
+      if (result.isConfirmed) {
+        localStorage.clear();
+        this.router.navigate(['/login']);
+      }
+    });
   }
 }

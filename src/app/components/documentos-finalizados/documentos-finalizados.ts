@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-documentos-finalizados',
@@ -11,10 +12,19 @@ import { CommonModule } from '@angular/common';
 export class DocumentosFinalizados {
   documentosFirmados: any[] = [];
 
-  constructor() {
+  constructor(private router: Router) {
     const data = localStorage.getItem('tramitesFirmados');
     if (data) {
       this.documentosFirmados = JSON.parse(data);
     }
+  }
+
+  goToDashboard(): void {
+    this.router.navigate(['/dashboard']);
+  }
+
+  logout(): void {
+    localStorage.clear();
+    this.router.navigate(['/']);
   }
 }

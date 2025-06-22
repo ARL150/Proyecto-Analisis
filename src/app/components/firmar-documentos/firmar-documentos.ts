@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 interface Interesado {
@@ -25,6 +26,8 @@ interface Tramite {
 })
 export class FirmarDocumentos implements OnInit {
   tramites: Tramite[] = [];
+
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
     const data = localStorage.getItem('tramitesParaFirmar');
@@ -58,5 +61,25 @@ export class FirmarDocumentos implements OnInit {
 
     // Notificación
     Swal.fire('Firmado', `El trámite "${tramiteFirmado.nombre}" fue firmado el ${fechaFormateada}.`, 'success');
+  }
+
+  goToDashboard(): void {
+    this.router.navigate(['/dashboard']);
+  }
+
+  logout(): void {
+    Swal.fire({
+      title: 'Cerrar sesión',
+      text: '¿Estás seguro de que deseas cerrar sesión?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, salir',
+      cancelButtonText: 'Cancelar'
+    }).then(result => {
+      if (result.isConfirmed) {
+        localStorage.clear();
+        this.router.navigate(['/']);
+      }
+    });
   }
 }
