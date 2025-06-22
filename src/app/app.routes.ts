@@ -10,7 +10,7 @@ import { AgendarDocumentos } from './components/agendar-documentos/agendar-docum
 import { FirmarDocumentos } from './components/firmar-documentos/firmar-documentos';
 import { Tramites } from './components/tramites/tramites';
 import { AuthGuard } from './guards/auth-guard';
-
+import { VerTramites } from './components/ver-tramites/ver-tramites';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -20,6 +20,7 @@ export const routes: Routes = [
   { path: 'firmar-documentos', component: FirmarDocumentos, canActivate: [AuthGuard] },
   { path: 'asignar-documentos', component: AsignarDocumentosComponent, canActivate: [AuthGuard] },
   { path: 'tramites', component: Tramites, canActivate: [AuthGuard] },
+  { path: 'ver-tramites', component: VerTramites, canActivate: [AuthGuard]}
 ];
 
 

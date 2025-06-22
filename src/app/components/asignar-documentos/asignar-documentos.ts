@@ -32,11 +32,13 @@ interface Trabajador {
 })
 export class AsignarDocumentosComponent {
   constructor(private router: Router) {
-    const data = localStorage.getItem('trabajadores');
-    if (data) {
-      this.trabajadores = JSON.parse(data);
-    }
+  const data = localStorage.getItem('trabajadores');
+  if (data) {
+    this.trabajadores = JSON.parse(data);
+  } else {
+    localStorage.setItem('trabajadores', JSON.stringify(this.trabajadores));
   }
+}
   // Lista de trámites disponibles
   tramitesDisponibles: string[] = [
     'Compraventa', 'Testamento', 'Donación', 'Poder notarial',
@@ -82,56 +84,66 @@ export class AsignarDocumentosComponent {
 
 
   // Método para asignar trámite
-  asignarTramite() {
-    if (!this.selectedTrabajadorId || !this.selectedTramite || !this.interesado.nombre) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Faltan datos',
-        text: 'Selecciona un trabajador, un trámite y llena la información del interesado.'
-      });
-      return;
-    }
-
-    this.asignando = true;
-
-    setTimeout(() => {
-      const trabajador = this.trabajadores.find(t => t.id === this.selectedTrabajadorId);
-
-      if (trabajador) {
-        if (trabajador.tramites.length < 5) {
-          const nuevoTramite: Tramite = {
-            nombre: this.selectedTramite,
-            descripcion: '',
-            documentos: [],
-            interesado: { ...this.interesado }
-          };
-
-          trabajador.tramites.push(nuevoTramite);
-          localStorage.setItem('trabajadores', JSON.stringify(this.trabajadores));
-
-          Swal.fire({
-            icon: 'success',
-            title: 'Trámite asignado',
-            text: `El trámite fue asignado correctamente a ${trabajador.nombre}.`,
-            timer: 2000,
-            showConfirmButton: false
-          });
-
-          // Limpiar campos
-          this.selectedTramite = '';
-          this.interesado = { nombre: '', correo: '', telefono: '' };
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Límite alcanzado',
-            text: 'Este trabajador ya tiene 5 trámites asignados.'
-          });
-        }
-      }
-
-      this.asignando = false;
-    }, 500);
+  // Método para asignar trámite
+asignarTramite() {
+  if (!this.selectedTrabajadorId || !this.selectedTramite || !this.interesado.nombre) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Faltan datos',
+      text: 'Selecciona un trabajador, un trámite y llena la información del interesado.'
+    });
+    return;
   }
 
+  this.asignando = true;
+
+  setTimeout(() => {
+    const trabajador = this.trabajadores.find(t => t.id === Number(this.selectedTrabajadorId));
+
+    if (trabajador) {
+      if (trabajador.tramites.length < 5) {
+        const nuevoTramite: Tramite = {
+          nombre: this.selectedTramite,
+          descripcion: '',
+          documentos: [],
+          interesado: { ...this.interesado }
+        };
+
+        // Guardar en el trabajador
+        trabajador.tramites.push(nuevoTramite);
+        localStorage.setItem('trabajadores', JSON.stringify(this.trabajadores));
+
+        // Guardar en lista global
+        const tramitesGlobal = JSON.parse(localStorage.getItem('tramitesAsignados') || '[]');
+        tramitesGlobal.push({
+          trabajadorId: trabajador.id,
+          trabajadorNombre: trabajador.nombre,
+          ...nuevoTramite
+        });
+        localStorage.setItem('tramitesAsignados', JSON.stringify(tramitesGlobal));
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Trámite asignado',
+          text: `El trámite fue asignado correctamente a ${trabajador.nombre}.`,
+          timer: 2000,
+          showConfirmButton: false
+        });
+
+        // Limpiar campos
+        this.selectedTramite = '';
+        this.interesado = { nombre: '', correo: '', telefono: '' };
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Límite alcanzado',
+          text: 'Este trabajador ya tiene 5 trámites asignados.'
+        });
+      }
+    }
+
+    this.asignando = false;
+  }, 500);
+}
 
 }

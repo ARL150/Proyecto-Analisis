@@ -1,18 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AsignarDocumentosComponent } from './asignar-documentos';
 
-import { AsignarDocumentos } from './asignar-documentos';
-
-describe('AsignarDocumentos', () => {
-  let component: AsignarDocumentos;
-  let fixture: ComponentFixture<AsignarDocumentos>;
+describe('AsignarDocumentosComponent', () => {
+  let component: AsignarDocumentosComponent;
+  let fixture: ComponentFixture<AsignarDocumentosComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AsignarDocumentos]
-    })
-    .compileComponents();
+      imports: [AsignarDocumentosComponent]
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(AsignarDocumentos);
+    fixture = TestBed.createComponent(AsignarDocumentosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
