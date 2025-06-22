@@ -11,10 +11,15 @@
         <h5 class="mb-0">Trabajador: {{ nombresTrabajadores[id] }}</h5>
       </div>
       <div class="card-body">
+        <div *ngIf="tramitesPorTrabajador[id].length === 0" class="text-muted">
+          No hay trámites asignados a este trabajador.
+        </div>
+
         <div *ngFor="let tramite of tramitesPorTrabajador[id]; let i = index" class="mb-3 pb-2 border-bottom">
           
           <div *ngIf="editando[id] !== i">
             <p><strong>Trámite:</strong> {{ tramite.nombre }}</p>
+            <p><strong>Descripción:</strong> {{ tramite.descripcion || 'Sin descripción' }}</p>
             <p><strong>Interesado:</strong> {{ tramite.interesado.nombre }}</p>
             <p><strong>Correo:</strong> {{ tramite.interesado.correo }}</p>
             <p><strong>Teléfono:</strong> {{ tramite.interesado.telefono }}</p>
@@ -24,6 +29,10 @@
             <div class="mb-2">
               <label><strong>Trámite:</strong></label>
               <input class="form-control" [(ngModel)]="tramite.nombre" />
+            </div>
+            <div class="mb-2">
+              <label><strong>Descripción:</strong></label>
+              <textarea class="form-control" [(ngModel)]="tramite.descripcion"></textarea>
             </div>
             <div class="mb-2">
               <label><strong>Nombre del interesado:</strong></label>
@@ -43,6 +52,7 @@
             <button *ngIf="editando[id] !== i" class="btn btn-sm btn-warning" (click)="editarTramite(id, i)">Editar</button>
             <button *ngIf="editando[id] === i" class="btn btn-sm btn-success" (click)="guardarTramite(id, i)">Guardar</button>
             <button class="btn btn-sm btn-danger" (click)="eliminarTramite(id, i)">Eliminar</button>
+            <button class="btn btn-sm btn-info" (click)="enviarAFirma(id, i)">Enviar a Firma</button>
           </div>
 
         </div>

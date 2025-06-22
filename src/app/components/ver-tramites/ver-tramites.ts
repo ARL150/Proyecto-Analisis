@@ -34,8 +34,7 @@ export class VerTramites implements OnInit {
   nombresTrabajadores: Record<number, string> = {};
   trabajadorIds: number[] = [];
   editando: { [trabajadorId: number]: number | null } = {};
-
-  tramiteOriginal: { [trabajadorId: number]: Tramite | null } = {}; // <- NUEVO
+  tramiteOriginal: { [trabajadorId: number]: Tramite | null } = {};
 
   ngOnInit(): void {
     const data = localStorage.getItem('trabajadores');
@@ -45,7 +44,7 @@ export class VerTramites implements OnInit {
         this.tramitesPorTrabajador[trabajador.id] = trabajador.tramites || [];
         this.nombresTrabajadores[trabajador.id] = trabajador.nombre;
         this.editando[trabajador.id] = null;
-        this.tramiteOriginal[trabajador.id] = null; // Inicializa
+        this.tramiteOriginal[trabajador.id] = null;
       }
       this.trabajadorIds = Object.keys(this.tramitesPorTrabajador).map(Number);
     }
@@ -53,7 +52,6 @@ export class VerTramites implements OnInit {
 
   editarTramite(trabajadorId: number, index: number): void {
     this.editando[trabajadorId] = index;
-    // Clona el trámite original para poder compararlo después
     this.tramiteOriginal[trabajadorId] = JSON.parse(JSON.stringify(this.tramitesPorTrabajador[trabajadorId][index]));
   }
 
@@ -61,7 +59,6 @@ export class VerTramites implements OnInit {
     const tramiteEditado = this.tramitesPorTrabajador[trabajadorId][index];
     const tramiteAnterior = this.tramiteOriginal[trabajadorId];
 
-    // Actualizar en trabajadores
     const data = localStorage.getItem('trabajadores');
     if (data) {
       const trabajadores: Trabajador[] = JSON.parse(data);
@@ -72,14 +69,10 @@ export class VerTramites implements OnInit {
       }
     }
 
-    // Actualizar en tramitesAsignados
     const globalData = localStorage.getItem('tramitesAsignados');
     if (globalData && tramiteAnterior) {
       let globalTramites: Tramite[] = JSON.parse(globalData);
-      const indexOriginal = globalTramites.findIndex(t =>
-        this.esMismoTramite(t, tramiteAnterior)
-      );
-
+      const indexOriginal = globalTramites.findIndex(t => this.esMismoTramite(t, tramiteAnterior));
       if (indexOriginal !== -1) {
         globalTramites[indexOriginal] = tramiteEditado;
         localStorage.setItem('tramitesAsignados', JSON.stringify(globalTramites));
@@ -102,7 +95,6 @@ export class VerTramites implements OnInit {
     }).then(result => {
       if (result.isConfirmed) {
         const tramiteEliminado = this.tramitesPorTrabajador[trabajadorId][index];
-
         this.tramitesPorTrabajador[trabajadorId].splice(index, 1);
 
         const data = localStorage.getItem('trabajadores');
@@ -118,9 +110,7 @@ export class VerTramites implements OnInit {
         const globalData = localStorage.getItem('tramitesAsignados');
         if (globalData) {
           let globalTramites: Tramite[] = JSON.parse(globalData);
-          globalTramites = globalTramites.filter(t =>
-            !this.esMismoTramite(t, tramiteEliminado)
-          );
+          globalTramites = globalTramites.filter(t => !this.esMismoTramite(t, tramiteEliminado));
           localStorage.setItem('tramitesAsignados', JSON.stringify(globalTramites));
         }
 
@@ -134,6 +124,43 @@ export class VerTramites implements OnInit {
         Swal.fire('Eliminado', 'El trámite fue eliminado.', 'success');
       }
     });
+  }
+
+  enviarAFirma(trabajadorId: number, index: number): void {
+    const tramite = this.tramitesPorTrabajador[trabajadorId][index];
+
+    const dataFirma = localStorage.getItem('tramitesParaFirmar');
+    const paraFirmar: Tramite[] = dataFirma ? JSON.parse(dataFirma) : [];
+    paraFirmar.push(tramite);
+    localStorage.setItem('tramitesParaFirmar', JSON.stringify(paraFirmar));
+
+    this.tramitesPorTrabajador[trabajadorId].splice(index, 1);
+
+    const dataTrab = localStorage.getItem('trabajadores');
+    if (dataTrab) {
+      const trabajadores: Trabajador[] = JSON.parse(dataTrab);
+      const trabajador = trabajadores.find(t => t.id === trabajadorId);
+      if (trabajador) {
+        trabajador.tramites.splice(index, 1);
+        localStorage.setItem('trabajadores', JSON.stringify(trabajadores));
+      }
+    }
+
+    const dataGlobal = localStorage.getItem('tramitesAsignados');
+    if (dataGlobal) {
+      let globalTramites: Tramite[] = JSON.parse(dataGlobal);
+      globalTramites = globalTramites.filter(t => !this.esMismoTramite(t, tramite));
+      localStorage.setItem('tramitesAsignados', JSON.stringify(globalTramites));
+    }
+
+    if (this.tramitesPorTrabajador[trabajadorId].length === 0) {
+      delete this.tramitesPorTrabajador[trabajadorId];
+      delete this.nombresTrabajadores[trabajadorId];
+      delete this.editando[trabajadorId];
+      this.trabajadorIds = Object.keys(this.tramitesPorTrabajador).map(Number);
+    }
+
+    Swal.fire('Enviado', 'El trámite ha sido enviado para firma.', 'success');
   }
 
   esMismoTramite(a: Tramite, b: Tramite): boolean {

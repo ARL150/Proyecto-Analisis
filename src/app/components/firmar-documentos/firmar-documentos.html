@@ -1,1 +1,23 @@
-<p>firmar-documentos works!</p>
+<div class="container mt-4">
+  <h3>Trámites para Firmar</h3>
+
+  <div *ngIf="tramites.length === 0" class="alert alert-info">
+    No hay trámites pendientes por firmar.
+  </div>
+
+  <div *ngFor="let tramite of tramites" class="card border-success mb-3">
+    <div class="card-header bg-success text-white">
+      <strong>{{ tramite.nombre }}</strong>
+    </div>
+    <div class="card-body">
+      <p><strong>Descripción:</strong> {{ tramite.descripcion }}</p>
+      <p><strong>Interesado:</strong> {{ tramite.interesado.nombre }}</p>
+      <p><strong>Correo:</strong> {{ tramite.interesado.correo }}</p>
+      <p><strong>Teléfono:</strong> {{ tramite.interesado.telefono }}</p>
+      <p><strong>Documentos:</strong></p>
+      <ul>
+        <li *ngFor="let doc of tramite.documentos">{{ doc }}</li>
+      </ul>
+    </div>
+  </div>
+</div>
