@@ -13,6 +13,7 @@ interface Tramite {
   descripcion: string;
   documentos: string[];
   interesado: Interesado;
+  fechaFirma?: string; // Campo opcional para guardar la fecha
 }
 
 @Component({
@@ -33,23 +34,29 @@ export class FirmarDocumentos implements OnInit {
   firmarTramite(index: number): void {
     const tramiteFirmado = this.tramites.splice(index, 1)[0];
 
-    // Obtener fecha actual
+    // Obtener fecha y hora actual
     const fechaActual = new Date();
-    const fechaFormateada = fechaActual.toLocaleDateString('es-MX', {
+    const fechaFormateada = fechaActual.toLocaleString('es-MX', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
     });
 
-    // Guardar el trámite sin modificar su estructura, puedes añadir la fecha si quieres
+    // Añadir fecha al trámite firmado
+    tramiteFirmado.fechaFirma = fechaFormateada;
+
+    // Actualizar localStorage de pendientes
     localStorage.setItem('tramitesParaFirmar', JSON.stringify(this.tramites));
 
+    // Guardar en firmados
     const firmadosData = localStorage.getItem('tramitesFirmados');
     const firmados: Tramite[] = firmadosData ? JSON.parse(firmadosData) : [];
     firmados.push(tramiteFirmado);
     localStorage.setItem('tramitesFirmados', JSON.stringify(firmados));
 
-    // Notificación con fecha real
+    // Notificación
     Swal.fire('Firmado', `El trámite "${tramiteFirmado.nombre}" fue firmado el ${fechaFormateada}.`, 'success');
   }
 }

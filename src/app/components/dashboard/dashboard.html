@@ -1,28 +1,20 @@
 <div class="d-flex vh-100">
-
   <!-- Sidebar izquierda -->
   <nav class="bg-primary text-white p-3" style="width: 220px; min-height: 100vh;">
     <h4 class="mb-4">Gestión Notarial</h4>
 
     <ul class="nav flex-column">
-      <!-- Enlace fijo a Dashboard -->
       <li class="nav-item mb-2">
         <a class="nav-link text-white" [routerLink]="['/dashboard']" routerLinkActive="active">
           <i class="bi bi-speedometer2 me-2"></i> Dashboard
         </a>
       </li>
 
-      <!-- Opciones dinámicas desde el arreglo options -->
+      <!-- Enlaces dinámicos -->
       <li class="nav-item mb-2" *ngFor="let option of options">
-        <a class="nav-link text-white" [routerLink]="[option.route]" routerLinkActive="active">
-          <i [class]="option.icon + ' me-2'"></i> {{ option.title }}
-        </a>
-      </li>
-
-      <!-- Opción fija para Ver Trámites -->
-      <li class="nav-item mb-2">
-        <a class="nav-link text-white" [routerLink]="['/ver-tramites']" routerLinkActive="active">
-          <i class="bi bi-list-check me-2"></i> Ver Trámites
+        <a class="nav-link text-white d-flex justify-content-between align-items-center" [routerLink]="[option.route]" routerLinkActive="active">
+          <span><i [class]="option.icon + ' me-2'"></i> {{ option.title }}</span>
+          <span *ngIf="option.pendientes && option.pendientes > 0" class="badge bg-danger ms-2">{{ option.pendientes }}</span>
         </a>
       </li>
     </ul>
@@ -30,8 +22,6 @@
 
   <!-- Contenido principal -->
   <div class="flex-grow-1 d-flex flex-column">
-
-    <!-- Header arriba -->
     <header class="d-flex justify-content-between align-items-center p-3 border-bottom">
       <h3>Dashboard</h3>
       <button class="btn btn-danger" (click)="logout()">
@@ -39,37 +29,24 @@
       </button>
     </header>
 
-    <!-- Área de opciones (cards) -->
     <main class="p-4 flex-grow-1" style="background-color: #f8f9fa;">
       <div class="row g-4">
-
-        <!-- Opciones dinámicas -->
         <div class="col-md-4" *ngFor="let option of options">
           <div class="card h-100 shadow-sm">
             <div class="card-body text-center">
               <i [class]="option.icon + ' display-4 text-primary mb-3'"></i>
-              <h5 class="card-title">{{ option.title }}</h5>
+              <h5 class="card-title">
+                {{ option.title }}
+                <span *ngIf="option.pendientes && option.pendientes > 0" class="badge rounded-pill bg-danger ms-2 fs-6">
+                  {{ option.pendientes }}
+                </span>
+              </h5>
               <p class="card-text">{{ option.description }}</p>
               <button class="btn btn-outline-primary" (click)="goTo(option.route)">Ir</button>
             </div>
           </div>
         </div>
-
-        <!-- Card fija para Ver Trámites -->
-        <div class="col-md-4">
-          <div class="card h-100 shadow-sm">
-            <div class="card-body text-center">
-              <i class="bi bi-list-check display-4 text-primary mb-3"></i>
-              <h5 class="card-title">Ver Trámites</h5>
-              <p class="card-text">Consulta todos los trámites ya asignados.</p>
-              <button class="btn btn-outline-primary" (click)="goTo('/ver-tramites')">Ir</button>
-            </div>
-          </div>
-        </div>
-
       </div>
     </main>
-
   </div>
-
 </div>
