@@ -1,63 +1,50 @@
-<!-- Header exterior con estilo profesional -->
+<!-- Encabezado -->
 <header class="w-full bg-blue-700 text-white py-4 shadow">
   <div class="container mx-auto flex justify-between items-center">
     <h2 class="text-3xl font-semibold flex items-center gap-2 hover:scale-105 duration-300">
       <i class="bi bi-journal-plus"></i> Asignar Trámite Notarial
     </h2>
-
     <div class="flex gap-3">
-      <button class="bg-gray-50 text-blue-700 px-3 py-1 rounded hover:bg-gray-200 hover:scale-110 duration-300" (click)="goToDashboard()">
+      <button class="bg-gray-50 text-blue-700 px-3 py-1 rounded hover:bg-gray-200 hover:scale-110 duration-300"
+              (click)="goToDashboard()">
         <i class="bi bi-arrow-left-circle"></i> Dashboard
       </button>
-      <button class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 hover:scale-110 duration-300" (click)="logout()">
+      <button class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 hover:scale-110 duration-300"
+              (click)="logout()">
         <i class="bi bi-box-arrow-right"></i> Salir
       </button>
     </div>
   </div>
 </header>
 
-<!-- Contenido -->
+<!-- Trámites creados sin asignar -->
 <div class="container py-4">
-  <div class="card shadow-sm">
-    <div class="card-header bg-blue-600 text-white">
-      <h4 class="mb-0 text-center text-2xl font-bold">Formulario de Asignación</h4>
+  <div class="card shadow-sm mt-3">
+    <div class="card-header bg-blue-500 text-white">
+      <h5 class="mb-0 text-lg">Trámites creados sin asignar</h5>
     </div>
-    <div class="card-body bg-gray-200">
-      <form (ngSubmit)="asignarTramite()">
-        <div class="mb-3">
-          <label for="trabajador" class="form-label">Selecciona un trabajador:</label>
-          <select [(ngModel)]="selectedTrabajadorId" name="trabajador" class="form-select" required>
-            <option [ngValue]="null">-- Selecciona --</option>
-            <option *ngFor="let t of trabajadores" [value]="t.id">{{ t.nombre }}</option>
-          </select>
-        </div>
+    <div class="card-body bg-gray-100" *ngIf="tramitesPendientes.length > 0; else noTramites">
+      <div *ngFor="let tramite of tramitesPendientes; let i = index" class="mb-4 p-3 border rounded bg-white shadow-sm">
+        <p><strong>Trámite:</strong> {{ tramite.nombre }}</p>
+        <p><strong>Interesado:</strong> {{ tramite.interesado.nombre }}</p>
+        <p><strong>Correo:</strong> {{ tramite.interesado.correo }}</p>
+        <p><strong>Teléfono:</strong> {{ tramite.interesado.telefono }}</p>
 
-        <div class="mb-3">
-          <label for="tramite" class="form-label">Selecciona un trámite:</label>
-          <select [(ngModel)]="selectedTramite" name="tramite" class="form-select" required>
-            <option value="">-- Selecciona --</option>
-            <option *ngFor="let t of tramitesDisponibles" [value]="t">{{ t }}</option>
-          </select>
-        </div>
+        <label class="form-label mt-2">Asignar a:</label>
+        <select [(ngModel)]="tramitesPendientes[i].asignadoA" name="asignadoA{{i}}" class="form-select mb-2">
+          <option [ngValue]="null">-- Selecciona --</option>
+          <option *ngFor="let t of trabajadores" [value]="t.id">{{ t.nombre }}</option>
+        </select>
 
-        <h5 class="mt-4">Datos del interesado</h5>
-        <div class="mb-2">
-          <input type="text" [(ngModel)]="interesado.nombre" name="nombre" placeholder="Nombre completo"
-            class="form-control" required>
-        </div>
-        <div class="mb-2">
-          <input type="email" [(ngModel)]="interesado.correo" name="correo" placeholder="Correo electrónico"
-            class="form-control">
-        </div>
-        <div class="mb-3">
-          <input type="text" [(ngModel)]="interesado.telefono" name="telefono" placeholder="Teléfono"
-            class="form-control">
-        </div>
-
-        <button type="submit" class="btn btn-primary w-100" [disabled]="asignando">
-          {{ asignando ? 'Asignando...' : 'Asignar trámite' }}
+        <button class="btn btn-success w-full"
+                (click)="asignarDesdePendientes(i)"
+                [disabled]="!tramitesPendientes[i].asignadoA">
+          Asignar trámite
         </button>
-      </form>
+      </div>
     </div>
+    <ng-template #noTramites>
+      <p class="text-center text-gray-600 py-3">No hay trámites pendientes por asignar.</p>
+    </ng-template>
   </div>
 </div>

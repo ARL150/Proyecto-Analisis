@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './tramites.css'
 })
 export class Tramites {
-constructor(private router: Router) {}
+  constructor(private router: Router) {}
 
   tramites = [
     {
@@ -91,7 +91,14 @@ constructor(private router: Router) {}
   ];
 
   goToDashboard() {
-    this.router.navigate(['/dashboard']);
+    const tipoUsuario = localStorage.getItem('loggedIn');
+    if (tipoUsuario === 'admin') {
+      this.router.navigate(['/dashboard']);
+    } else if (tipoUsuario === 'cliente') {
+      this.router.navigate(['/cliente']);
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 
   logout() {

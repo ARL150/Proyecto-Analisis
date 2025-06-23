@@ -27,6 +27,12 @@ export class Dashboard {
       route: '/tramites'
     },
     {
+      title: 'Crear Nuevo Documento',
+      description: 'Crearas un nuevo documento para que sea procesado',
+      icon: 'bi bi-person-badge',
+      route: '/nuevo-tramite'
+    },
+    {
       title: 'Asignar Documentos',
       description: 'Asigna documentos a usuarios',
       icon: 'bi bi-person-badge',
