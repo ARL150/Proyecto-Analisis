@@ -38,22 +38,32 @@ export class AsignarDocumentosComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-    const trabajadoresData = localStorage.getItem('trabajadores');
-    this.trabajadores = trabajadoresData ? JSON.parse(trabajadoresData) : [];
+  const trabajadoresData = localStorage.getItem('trabajadores');
 
-    const creadosData = localStorage.getItem('tramitesCreados');
-    this.tramitesPendientes = creadosData ? JSON.parse(creadosData) : [];
+  // Si hay datos previos, los usamos. Si no, guardamos los actuales en localStorage.
+  if (trabajadoresData) {
+    this.trabajadores = JSON.parse(trabajadoresData);
+  } else {
+    // Esta es tu lista original que se debe mantener
+    this.trabajadores = [
+      { id: 1, nombre: 'Andrea López', tramites: [] },
+      { id: 2, nombre: 'Carlos Méndez', tramites: [] },
+      { id: 3, nombre: 'Lucía Pérez', tramites: [] },
+      { id: 4, nombre: 'Marco Díaz', tramites: [] },
+      { id: 5, nombre: 'Sofía Ríos', tramites: [] },
+      { id: 6, nombre: 'Javier Torres', tramites: [] },
+      { id: 7, nombre: 'Daniela Cruz', tramites: [] },
+      { id: 8, nombre: 'Fernando Gómez', tramites: [] },
+    ];
+    localStorage.setItem('trabajadores', JSON.stringify(this.trabajadores));
   }
 
+  const creadosData = localStorage.getItem('tramitesCreados');
+  this.tramitesPendientes = creadosData ? JSON.parse(creadosData) : [];
+}
+
   goToDashboard() {
-    const tipoUsuario = localStorage.getItem('loggedIn');
-    if (tipoUsuario === 'admin') {
-      this.router.navigate(['/dashboard']);
-    } else if (tipoUsuario === 'cliente') {
-      this.router.navigate(['/cliente']);
-    } else {
-      this.router.navigate(['/login']);
-    }
+    this.router.navigate(['/dashboard']);
   }
 
   logout() {
